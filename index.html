@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyCamp - Оцени день!</title>
+    <title>SkyCamp - Оценка</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -13,76 +13,65 @@
     </div>
 
     <div class="container">
-        <!-- Хедер -->
-        <div class="header">
+        <header class="theme-header">
             <div class="header-content">
                 <div class="header-text">
                     <h1>SKYCAMP</h1>
-                    <p>Оцени свой день!</p>
+                    <p id="subtitle">Загрузка...</p>
                 </div>
                 <div class="character">
                     <img src="photo/kaifer.png" alt="Кайфер">
                 </div>
             </div>
-        </div>
+        </header>
 
-        <!-- ЭКРАН 1: Сбор метрик -->
-        <div id="mainFormSection" class="form-card">
-            <div class="question">ОЦЕНИ СВОЙ ДЕНЬ!</div>
+        <main id="formCard" class="theme-card">
+            <h2 class="question" id="questionText">Оцени урок</h2>
             
             <div class="rating-timeline">
                 <div class="timeline-track">
                     <div class="timeline-line"></div>
-                    <div class="timeline-progress" id="timelineProgress"></div>
+                    <div class="timeline-progress" id="progressBar"></div>
                 </div>
-                <div class="timeline-track" id="timelinePoints"></div>
+                <div class="timeline-track" id="ratingButtons"></div>
             </div>
 
-            <form id="npsForm">
-                <div class="form-section">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <input type="text" id="childName" name="childName" required placeholder="Имя">
-                        </div>
-                        <div class="form-group">
-                            <select id="city" name="city" required>
-                                <option value="" disabled selected>Выбери город</option>
-                                <option value="Чебоксары">Чебоксары</option>
-                                <option value="Астрахань">Астрахань</option>
-                                <option value="Нижний Новгород">Нижний Новгород</option>
-                            </select>
-                        </div>
+            <form id="surveyForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Имя</label>
+                        <input type="text" id="name" required placeholder="Как тебя зовут?">
                     </div>
-                    <div class="form-row">
-                        <div class="form-group full-width">
-                            <textarea id="comment" name="comment" placeholder="Расскажи, что понравилось..."></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="city">Город</label>
+                        <select id="city" required>
+                            <option value="" disabled selected>Выбери город</option>
+                            <option value="Чебоксары">Чебоксары</option>
+                            <option value="Астрахань">Астрахань</option>
+                            <option value="Нижний Новгород">Нижний Новгород</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="comment">Комментарий</label>
+                        <textarea id="comment" placeholder="Что запомнилось? (необязательно)"></textarea>
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn" id="submitBtn">ОТПРАВИТЬ!</button>
-                <div class="loading" id="loading">
-                    <div class="loading-spinner"></div>
-                    <div>Отправляем...</div>
+                <button type="submit" class="theme-btn" id="submitBtn">ОТПРАВИТЬ</button>
+                <div class="loader" id="loader" style="display:none;">
+                    <div class="spinner"></div> Отправляем...
                 </div>
             </form>
-        </div>
+        </main>
 
-        <!-- ЭКРАН 2: Успех + Мем (скрыт по умолчанию) -->
-        <div id="successSection" class="form-card success-card" style="display: none;">
-            <div class="success-content">
-                <h2>ТЫ СУПЕР!</h2>
-                <p>Спасибо за оценку!</p>
-                
-                <div class="meme-section">
-                    <div class="meme-badge">🎲 ТВОЙ МЕМ ДНЯ</div>
-                    <div class="meme-card">
-                        <img id="dailyMeme" src="" alt="Meme of the day">
-                    </div>
-                </div>
-                
-                <button class="submit-btn secondary" onclick="location.reload()">ПРОЙТИ ЕЩЁ РАЗ</button>
+        <div id="successCard" class="theme-card success" style="display:none;">
+            <h2>Ты супер!</h2>
+            <p>Твоя оценка сохранена.</p>
+            <div class="meme-box">
+                <div class="meme-badge"> МЕМ ДНЯ</div>
+                <div class="meme-frame"><img id="memeImg" src="" alt="Meme"></div>
             </div>
+            <button class="theme-btn secondary" onclick="location.reload()">ЕЩЁ РАЗ</button>
         </div>
     </div>
 
