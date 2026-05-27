@@ -1,40 +1,110 @@
-// Оставляем массив пустым, чтобы текст не выводился
-const ratings = ['', '', '', '', '']; 
+const urlParams = new URLSearchParams(window.location.search);
+const type = urlParams.get('type') || 'soft'; // soft, hard, creative, nps
 
-const TOTAL_MEMES = 13; // Укажи своё количество мемов
-const MEME_EXTENSION = 'jpg'; 
+const config = {
+    soft: {
+        subtitle: 'Оцени урок по Soft Skills',
+        question: 'ОЦЕНИ УРОК ПО SOFT SKILLS',
+        primary: '#FF5A0A', accent: '#826CFF',
+        scale: 5, start: 1,
+        labels: { 1: 'Отвратительно', 2: 'Плохо', 3: 'Норм', 4: 'Хорошо', 5: 'Отлично' }
+    },
+    hard: {
+        subtitle: 'Оцени профессиональный урок',
+        question: 'Оцени профессиональный урок',
+        primary: '#22E07A', accent: '#0063AF',
+        scale: 5, start: 1,
+        labels: { 1: 'Отвратительно', 2: 'Плохо', 3: 'Норм', 4: 'Хорошо', 5: 'Отлично' }
+    },
+    creative: {
+        subtitle: 'Оцени творческий урок',
+        question: 'ОЦЕНИ ТВОРЧЕСКИЙ УРОК',
+        primary: '#FFD700', accent: '#FF5A0A',
+        scale: 5, start: 1,
+        labels: { 1: 'Отвратительно', 2: 'Плохо', 3: 'Норм', 4: 'Хорошо', 5: 'Отлично' }
+    },
+    nps: {
+        subtitle: 'Порекомендуешь ли ты нас?',
+        question: 'ПОРЕКОМЕНДУЕШЬ ЛИ ТЫ SKYCAMP ДРУГУ?',
+        primary: '#826CFF', accent: '#000000',
+        scale: 10, start: 0,
+        labels: null
+    }
+};
 
-function initTimeline() {
-    const container = document.getElementById('timelinePoints');
-    container.innerHTML = '';
-    ratings.forEach((rating, index) => {
-        const point = document.createElement('label');
-        point.className = 'timeline-point';
-        point.innerHTML = `
-            <input type="radio" name="rating" value="${index + 1}" onchange="updateTimelineProgress(${index + 1})">
-            <div class="point-circle">${index + 1}</div>
-            <!-- Убрали вывод текста, теперь здесь пусто -->
-        `;
-        container.appendChild(point);
-    });
+const cfg = config[type] || config.soft;
+
+// Применяем настройки
+document.title = `SkyCamp - ${cfg.subtitle}`;
+document.getElementById('subtitle').textContent = cfg.subtitle;
+document.getElementById('questionText').textContent = cfg.question;
+document.documentElement.style.setProperty('--primary', cfg.primary);
+document.documentElement.style.setProperty('--accent', cfg.accent);
+
+// Генерация кнопок рейтинга
+const container = document.getElementById('ratingButtons');
+for (let i = cfg.start; i <= cfg.scale; i++) {
+    const label = document.createElement('label');
+    label.className = 'rating-btn';
+    
+    let circleStyle = '';
+    if (type === 'nps') {
+        if (i >= 9) circleStyle = 'background:#22E07A;color:#fff;';
+        else if (i <= 6) circleStyle = 'background:#FF5A0A;color:#fff;';
+    }
+    
+    const textLabel = cfg.labels ? `<div class="label">${cfg.labels[i]}</div>` : '';
+    
+    label.innerHTML = `
+        <input type="radio" name="rating" value="${i}" onchange="updateProgress(${i})">
+        <div class="circle" style="${circleStyle}">${i}</div>
+        ${textLabel}
+    `;
+    container.appendChild(label);
 }
 
-function updateTimelineProgress(value) {
-    const percentage = ((value - 1) / 4) * 100;
-    document.getElementById('timelineProgress').style.width = percentage + '%';
+function updateProgress(val) {
+    const max = cfg.scale;
+    document.getElementById('progressBar').style.width = `${(val / max) * 100}%`;
 }
 
-function loadRandomMeme() {
-    const randomNum = Math.floor(Math.random() * TOTAL_MEMES) + 1;
-    const memePath = `images/meme${randomNum}.${MEME_EXTENSION}`;
-    const img = document.getElementById('dailyMeme');
-    img.src = memePath;
-    img.onerror = () => {
-        img.parentElement.innerHTML = '<div style="padding:40px;font-size:3em;"></div>';
-    };
-}
-
-document.getElementById('npsForm').addEventListener('submit', async function(e) {
+// Отправка формы
+document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const name = document.getElementById('name').value.trim();
+    const city = document.getElementById('city').value;
+    const rating = document.querySelector('input[name="rating"]:checked');
+    const comment = document.getElementById('comment').value.trim();
+    
+    if (!name || !city || !rating) {
+        alert('Пожалуйста, заполни имя, город и выбери оценку!');
+        return;
+    }
+    
+    document.getElementById('loader').style.display = 'block';
+    document.getElementById('submitBtn').style.display = 'none';
+    
+    try {
+        await fetch('https://script.google.com/macros/s/AKfycby4gOxlXju-HmvAVbf2w-gsdCbwp163bxCVSUocyFnNaphdKVQm4eos3ZhwTsfUO0uxjA/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ name, city, rating: rating.value, comment, type })
+        });
+        
+        document.getElementById('formCard').style.display = 'none';
+        document.getElementById('successCard').style.display = 'block';
+        
+        // Загрузка мема
+        const r = Math.floor(Math.random() * 13) + 1;
+        document.getElementById('memeImg').src = `images/meme${r}.jpg`;
+        
+    } catch (err) {
+        alert('Ошибка отправки. Проверь интернет.');
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('submitBtn').style.display = 'block';
+    }
+});document.getElementById('npsForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const selectedRating = document.querySelector('input[name="rating"]:checked');
