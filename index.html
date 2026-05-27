@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyCamp - Оцени день!</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="bg-pattern">
+        <div class="dot-pattern top-left"></div>
+        <div class="dot-pattern bottom-right"></div>
+    </div>
+
+    <div class="container">
+        <!-- Хедер -->
+        <div class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>SKYCAMP</h1>
+                    <p>Оцени свой день!</p>
+                </div>
+                <div class="character">
+                    <img src="photo/kaifer.png" alt="Кайфер">
+                </div>
+            </div>
+        </div>
+
+        <!-- ЭКРАН 1: Сбор метрик -->
+        <div id="mainFormSection" class="form-card">
+            <div class="question">ОЦЕНИ СВОЙ ДЕНЬ!</div>
+            
+            <div class="rating-timeline">
+                <div class="timeline-track">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                </div>
+                <div class="timeline-track" id="timelinePoints"></div>
+            </div>
+
+            <form id="npsForm">
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <input type="text" id="childName" name="childName" required placeholder="Имя">
+                        </div>
+                        <div class="form-group">
+                            <select id="city" name="city" required>
+                                <option value="" disabled selected>Выбери город</option>
+                                <option value="Чебоксары">Чебоксары</option>
+                                <option value="Астрахань">Астрахань</option>
+                                <option value="Нижний Новгород">Нижний Новгород</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <textarea id="comment" name="comment" placeholder="Расскажи, что понравилось..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">ОТПРАВИТЬ!</button>
+                <div class="loading" id="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Отправляем...</div>
+                </div>
+            </form>
+        </div>
+
+        <!-- ЭКРАН 2: Успех + Мем (скрыт по умолчанию) -->
+        <div id="successSection" class="form-card success-card" style="display: none;">
+            <div class="success-content">
+                <h2>ТЫ СУПЕР!</h2>
+                <p>Спасибо за оценку!</p>
+                
+                <div class="meme-section">
+                    <div class="meme-badge">🎲 ТВОЙ МЕМ ДНЯ</div>
+                    <div class="meme-card">
+                        <img id="dailyMeme" src="" alt="Meme of the day">
+                    </div>
+                </div>
+                
+                <button class="submit-btn secondary" onclick="location.reload()">ПРОЙТИ ЕЩЁ РАЗ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
