@@ -24,9 +24,10 @@ const config = {
         labels: { 1: 'Отвратительно', 2: 'Плохо', 3: 'Норм', 4: 'Хорошо', 5: 'Отлично' }
     },
     nps: {
-        // ✅ Поменяли местами!
-        subtitle: 'Порекомендуешь ли ты нас?', // Короткий в шапку
-        question: 'ГОТОВ ЛИ ТЫ РЕКОМЕНДОВАТЬ SKYCAMP ДРУЗЬЯМ? 1 - ВООБЩЕ НЕ ГОТОВ, 10 - ТОЧНО ГОТОВ!', // Длинный в карточку
+        // ✅ Убираем текст из шапки (оставляем пустым)
+        subtitle: '', 
+        // ✅ Длинный текст теперь в белом поле
+        question: 'ГОТОВ ЛИ ТЫ РЕКОМЕНДОВАТЬ SKYCAMP ДРУЗЬЯМ?\n1 — ВООБЩЕ НЕ ГОТОВ, 10 — ТОЧНО ГОТОВ!',
         primary: '#826CFF', accent: '#000000',
         scale: 10, start: 0,
         labels: null
@@ -35,9 +36,14 @@ const config = {
 
 const cfg = config[type] || config.soft;
 
-if (type === 'nps') document.body.classList.add('nps-mode');
+if (type === 'nps') {
+    document.body.classList.add('nps-mode');
+    // ✅ Скрываем Кайфера на странице NPS
+    const charEl = document.querySelector('.character');
+    if (charEl) charEl.style.display = 'none';
+}
 
-document.title = `SkyCamp - ${cfg.subtitle}`;
+document.title = `SkyCamp - ${cfg.subtitle || 'Оценка'}`;
 document.getElementById('subtitle').textContent = cfg.subtitle;
 document.getElementById('questionText').textContent = cfg.question;
 document.documentElement.style.setProperty('--primary', cfg.primary);
