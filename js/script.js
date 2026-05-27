@@ -24,9 +24,9 @@ const config = {
         labels: { 1: 'Отвратительно', 2: 'Плохо', 3: 'Норм', 4: 'Хорошо', 5: 'Отлично' }
     },
     nps: {
-        // 2. Обновил подпись
-        subtitle: 'Готов ли ты рекомендовать SkyCamp друзьям? 1 - вообще не готов, 10 - точно готов!',
-        question: 'ПОРЕКОМЕНДУЕШЬ ЛИ ТЫ SKYCAMP ДРУГУ?',
+        // ✅ Поменяли местами!
+        subtitle: 'Порекомендуешь ли ты нас?', // Короткий в шапку
+        question: 'ГОТОВ ЛИ ТЫ РЕКОМЕНДОВАТЬ SKYCAMP ДРУЗЬЯМ? 1 - ВООБЩЕ НЕ ГОТОВ, 10 - ТОЧНО ГОТОВ!', // Длинный в карточку
         primary: '#826CFF', accent: '#000000',
         scale: 10, start: 0,
         labels: null
@@ -35,16 +35,13 @@ const config = {
 
 const cfg = config[type] || config.soft;
 
+if (type === 'nps') document.body.classList.add('nps-mode');
+
 document.title = `SkyCamp - ${cfg.subtitle}`;
 document.getElementById('subtitle').textContent = cfg.subtitle;
 document.getElementById('questionText').textContent = cfg.question;
 document.documentElement.style.setProperty('--primary', cfg.primary);
 document.documentElement.style.setProperty('--accent', cfg.accent);
-
-// 3. Если это NPS, добавляем класс для инверсии Кайфера
-if (type === 'nps') {
-    document.querySelector('.theme-header').classList.add('nps-dark');
-}
 
 const container = document.getElementById('ratingButtons');
 for (let i = cfg.start; i <= cfg.scale; i++) {
@@ -68,8 +65,7 @@ for (let i = cfg.start; i <= cfg.scale; i++) {
 }
 
 function updateProgress(val) {
-    const max = cfg.scale;
-    document.getElementById('progressBar').style.width = `${(val / max) * 100}%`;
+    document.getElementById('progressBar').style.width = `${(val / cfg.scale) * 100}%`;
 }
 
 document.getElementById('surveyForm').addEventListener('submit', async (e) => {
@@ -90,14 +86,12 @@ document.getElementById('surveyForm').addEventListener('submit', async (e) => {
     
     try {
         await fetch('https://script.google.com/macros/s/AKfycbz330iryrjLFtcDt7QtB9ncGtBpvdXS3WYMsUPEZwPnSHVJuU4jd9iOxBGSG4UvnTU14g/exec', {
-            method: 'POST',
-            mode: 'no-cors',
+            method: 'POST', mode: 'no-cors',
             body: JSON.stringify({ name, city, rating: rating.value, comment, type })
         });
         
         document.getElementById('formCard').style.display = 'none';
         document.getElementById('successCard').style.display = 'block';
-        
         const r = Math.floor(Math.random() * 13) + 1;
         document.getElementById('memeImg').src = `images/meme${r}.jpg`;
         
