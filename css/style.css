@@ -43,7 +43,7 @@ body {
 .container { max-width: 900px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
 /* =========================================
-   3. ХЕДЕР
+   3. ХЕДЕР И ПЕРСОНАЖ
    ========================================= */
 .theme-header {
     background: linear-gradient(135deg, var(--primary), var(--accent));
@@ -64,7 +64,7 @@ body {
     text-shadow: 3px 3px 0 var(--dark); line-height: 1;
 }
 .header-text p {
-    color: #fff; font-size: 1.3em; font-weight: 700;
+    color: #fff; font-size: 1.1em; font-weight: 700; line-height: 1.3;
     text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
 }
 .character {
@@ -72,6 +72,11 @@ body {
     width: 220px; opacity: 0.9; filter: drop-shadow(4px 4px 0 var(--dark));
 }
 .character img { width: 100%; display: block; }
+
+/* ✅ Белый Кайфер для тёмного фона NPS */
+body.nps-mode .character img {
+    filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,255,255,0.5));
+}
 
 /* =========================================
    4. КАРТОЧКИ
@@ -90,23 +95,20 @@ body {
 }
 
 /* =========================================
-   5. ТАЙМЛАЙН ОЦЕНОК (КРУЖКИ)
+   5. ТАЙМЛАЙН ОЦЕНОК
    ========================================= */
 .rating-timeline { margin: 20px 0 30px; padding: 10px 0; position: relative; }
 .timeline-track {
     display: flex; justify-content: space-between; position: relative;
     gap: 10px; margin-bottom: 20px;
 }
-.timeline-line {
+.timeline-line, .timeline-progress {
     position: absolute; top: 35px; left: 0; right: 0; height: 6px;
-    background: var(--gray); border: 2px solid var(--dark); z-index: 0;
-    border-radius: 3px;
+    border-radius: 3px; z-index: 0;
 }
-.timeline-progress {
-    position: absolute; top: 35px; left: 0; height: 6px;
-    background: linear-gradient(90deg, var(--primary), var(--accent)); z-index: 1;
-    transition: width 0.3s ease; border-radius: 3px;
-}
+.timeline-line { background: var(--gray); border: 2px solid var(--dark); }
+.timeline-progress { background: linear-gradient(90deg, var(--primary), var(--accent)); z-index: 1; transition: width 0.3s ease; }
+
 .rating-btn {
     position: relative; z-index: 2; cursor: pointer; display: flex;
     flex-direction: column; align-items: center; flex: 1;
@@ -119,19 +121,25 @@ body {
     width: 70px; height: 70px; border-radius: 50%; background: var(--white);
     border: 4px solid var(--dark); display: flex; align-items: center; justify-content: center;
     font-size: 1.8em; font-weight: 900; color: var(--dark);
-    box-shadow: var(--shadow); transition: all 0.2s; margin-bottom: 10px;
+    box-shadow: var(--shadow); transition: all 0.2s; margin-bottom: 10px; flex-shrink: 0;
 }
 .rating-btn:hover .circle { background: var(--primary); color: #fff; transform: scale(1.05); }
-
-.rating-btn input:checked + .circle {
-    background: var(--accent); color: #fff; transform: scale(1.1);
-    box-shadow: var(--shadow-hover);
-}
+.rating-btn input:checked + .circle { background: var(--accent); color: #fff; transform: scale(1.1); box-shadow: var(--shadow-hover); }
 
 .label {
     font-size: 0.85em; font-weight: 700; text-transform: uppercase;
     text-align: center; line-height: 1.1; color: var(--dark); width: 100%;
 }
+
+/* ✅ СПЕЦИАЛЬНЫЕ СТИЛИ ДЛЯ NPS (0-10) */
+body.nps-mode .timeline-track { gap: 5px; justify-content: center; }
+body.nps-mode .circle {
+    width: 45px; height: 45px; font-size: 1.3em;
+    border-width: 3px; box-shadow: 3px 3px 0 var(--dark); margin-bottom: 6px;
+}
+body.nps-mode .timeline-line, 
+body.nps-mode .timeline-progress { top: 22px; } /* Центр для 45px */
+body.nps-mode .label { font-size: 0.65em; max-width: 40px; }
 
 /* =========================================
    6. ФОРМА
@@ -193,7 +201,7 @@ textarea { min-height: 80px; resize: vertical; }
 .meme-frame img { width: 100%; display: block; }
 
 /* =========================================
-   9. АДАПТИВНОСТЬ
+   9. АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
    ========================================= */
 @media (max-width: 768px) {
     .header-text h1 { font-size: 2.2em; }
@@ -201,7 +209,13 @@ textarea { min-height: 80px; resize: vertical; }
     .form-grid { grid-template-columns: 1fr; }
     .theme-card { padding: 20px 15px; }
     
+    /* Адаптация обычных кружков (1-5) */
     .circle { width: 55px; height: 55px; font-size: 1.4em; }
     .timeline-line, .timeline-progress { top: 27px; }
     .label { font-size: 0.75em; }
+    
+    /* Адаптация NPS кружков на телефоне */
+    body.nps-mode .circle { width: 38px; height: 38px; font-size: 1.1em; }
+    body.nps-mode .timeline-line, body.nps-mode .timeline-progress { top: 19px; }
+    body.nps-mode .label { font-size: 0.6em; max-width: 35px; }
 }
